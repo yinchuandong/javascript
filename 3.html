@@ -43,7 +43,7 @@
         list = [];//对象数组，存放每一个tag左上角的位置
         var marginx = 10;
         var marginy = 10;//每个DIV的外边距，宽和高
-        var width = 200;
+        width = 200;
         var height = 200;
         for (var i = 0; i < tag.length; i++) {
             pos = new Object();
@@ -87,8 +87,9 @@ function mouseMove(){
                                 x = j;//得出序号X,在这一步之前一直没错，可测试一下。
                             }
                         }
-                        if((curX-list[x].pLeft)<0) border.insertBefore($(tag[x]));//把clone插入进来
-                        else  border.insertAfter($(tag[x]));//把clone插入进来
+                        var distance = curX-list[x].pLeft;
+                        if(distance<0.5*width&&distance>=0) border.insertBefore($(tag[x]));//把clone插入进来
+                        if(distance>(-0.5)*width&&distance<0) border.insertAfter($(tag[x]));//把clone插入进来
                     }
 function mouseUp(){
                         var clone = border.clone();
