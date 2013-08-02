@@ -40,23 +40,29 @@
     });
     function beginDrag(){
         tag = $('.tag');
-        list = [];//对象数组，存放每一个tag左上角的位置
+        list = [];
         var marginx = 10;
         var marginy = 10;//每个DIV的外边距，宽和高
         width = 200;
         var height = 200;
-        for (var i = 0; i < tag.length; i++) {
-            pos = new Object();
-            pos.pLeft = $(tag[i]).position().left;
-            pos.pTop =  $(tag[i]).position().top;
-            list.push(pos);
-        };
+        pos = new Object();
+        storePos();
         for (var i = 0; i < tag.length; i++) {
             (function(i){
                 $($('.tag')[i]).mousedown(mouseDown);
             })(i);
         }
     }
+function storePos(){
+        list = [];
+    for (var i = 0; i < tag.length; i++) {
+            //对象数组，存放每一个tag左上角的位置
+            pos = new Object();
+            pos.pLeft = $(tag[i]).position().left;
+            pos.pTop =  $(tag[i]).position().top;
+            list.push(pos);
+        };
+}
 function mouseDown(){
                     _this = $(this);
                     wrap = $('#wrap');
@@ -100,8 +106,10 @@ function mouseUp(){
                         _this.removeAttr("style");
                         _this.css('position','relative');
                         tag = $('.tag');
+                        storePos();
                         $(document).unbind('mousemove');
                         $(document).unbind('mouseup');
+                        
                     }
 
 

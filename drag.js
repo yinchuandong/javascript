@@ -49,6 +49,7 @@ function stop(oEvent){
     $(document).unbind('mousemove');
     $(document).unbind('mouseup');
     dropItem();
+    buildPosTable();
     
 }
 
@@ -76,7 +77,7 @@ function swapItem(ev){
 	}
 
 	lastPos = $(dragElement).offset();
-	buildPosTable();
+	//buildPosTable();
 	return false;
 }
 
