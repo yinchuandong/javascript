@@ -1,0 +1,42 @@
+<html>
+<head>
+	<title>paipai</title>	
+</head>
+<body>
+<script type="text/javascript">
+var get = parseUrl();
+window.onload = function(){
+	var head = document.getElementsByTagName('head');
+	var script = document.createElement('script');
+	script.src = "http://express.paipai.com/tws/portal/exp/PortalMain?keyword=%E8%BF%9E%E8%A1%A3%E8%A3%99&navid=20501&commprice=0|99999999&count=21&pageno=2&pid=72058711552417071&siteid=7&adposcount=1&addinfo=1&outerpos=10001&ptag=40012.5.1&offset=20&t=0.6337522165849805&callback=display&LOGINTAG=1";
+	script.type="text/javascript";
+	head[0].appendChild(script);
+	
+}
+
+function display(result){
+	
+	result = eval(result);
+	// alert(result.data['72058711552417071'][0].adTitle);
+	alert(result.data[get['pid']][0].adTitle);
+}
+
+function parseUrl(){
+	var list = {};
+	var url = window.location.search.substr(1);
+    if(url.length > 0) 
+    {
+      	var arr = url.split(/[&=]/);
+      	var len = arr.length;
+		for(i=0;i<len;i+=2) 
+		{
+			list[arr[i]]= arr[i+1];
+		}
+    }  
+    return list;
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,105 @@
+﻿<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>css3 transform</title>
+
+<style type="text/css">
+        .wrap{
+            width: 1000px;
+            height: 500px;
+        }
+        a{
+            display: block;
+            width: 200px;
+            margin: 10px;
+            height: 200px;
+            float: left;
+            position: relative;
+        }
+        .unit{
+            width: 200px;
+            height: 200px;
+            background:#ffff12;        
+        }
+        .border{
+            border: 1px dashed #555;
+            width: 198px;
+            height: 198px;
+        }
+    </style>
+</head>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="drag.js"></script>
+<<<<<<< HEAD
+
+<body>
+<div class="wrap">
+<a href="#"><div class="unit">0</div></a>
+=======
+<script type="text/javascript">
+$(document).ready(function() {
+    beginDrag();
+});
+var dragElement = null;
+var offsetX=0,offsetY=0,offset;
+var allowDrag = false;
+var placeHolderItem = $('<a href="#" class="placeHolderItem"></a>');
+
+function beginDrag () {
+    $('.wrap a').mousedown(function(event){
+        dragElement = $(this);
+        offset = $(this).offset();
+        allowDrag = true;
+        var ml = parseInt(dragElement.css('marginLeft'));
+        var mr = parseInt(dragElement.css('marginRight'));
+        offsetX = event.clientX - offset.left;
+        offsetY = event.clientY - offset.top;
+        var height = $(this).height();
+        var width = $(this).width();
+        placeHolderItem.css({height:height,width:width});
+        $(dragElement).after(placeHolderItem);
+        $(dragElement).css({position:'absolute','z-index':999,cursor:'move'});
+        move(event);
+        // console.log(style)
+        $(document).mousemove(move);
+        $(document).mouseup(stop);
+        return false;
+        // event.preventDefault();
+    });
+    $('.wrap a').click(function(){
+        console.log('click');
+    });
+}
+
+function move(oEvent){
+    var nLeft = oEvent.clientX - offsetX ;
+    var nTop = oEvent.clientY - offsetY;
+    $(dragElement).css({left:nLeft, top:nTop});
+
+    // return false;
+    // console.log(oEvent.clientX);
+}
+function stop(oEvent){
+    $(document).unbind('mousemove');
+    $(document).unbind('mouseup');
+    placeHolderItem.remove();
+}
+</script>
+<body>
+<div class="wrap">
+>>>>>>> db3745f247b5a562be4a9b97e59b1cbda0540297
+<a href="#"><div class="unit">1</div></a>
+<a href="#"><div class="unit">2</div></a>
+<a href="#"><div class="unit">3</div></a>
+<a href="#"><div class="unit">4</div></a>
+<a href="#"><div class="unit">5</div></a>
+<a href="#"><div class="unit">6</div></a>
+<<<<<<< HEAD
+<a href="#"><div class="unit">7</div></a>
+
+=======
+>>>>>>> db3745f247b5a562be4a9b97e59b1cbda0540297
+</div>
+</body>
+</html>

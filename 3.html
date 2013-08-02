@@ -1,0 +1,121 @@
+﻿<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>css3 transform</title>
+<script src="jquery.js" type="text/javascript"></script>
+<style type="text/css">
+        .wrap{
+            width: 1000px;
+            height: 500px;
+            position: relative;
+        }
+        a{
+            display: block;
+            width: 200px;
+            margin: 10px;
+            height: 200px;
+            float: left;
+            position: relative;
+        }
+        .unit{
+            width: 200px;
+            height: 200px;
+            background:#ffff12;        
+        }
+        #border{
+            border: 1px dashed #555;
+            width: 198px;
+            height: 198px;
+            float: left;
+            margin: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var drag1 = new beginDrag();
+    });
+    function beginDrag(){
+        tag = $('.tag');
+        list = [];//对象数组，存放每一个tag左上角的位置
+        var marginx = 10;
+        var marginy = 10;//每个DIV的外边距，宽和高
+        var width = 200;
+        var height = 200;
+        for (var i = 0; i < tag.length; i++) {
+            pos = new Object();
+            pos.pLeft = $(tag[i]).position().left;
+            pos.pTop =  $(tag[i]).position().top;
+            list.push(pos);
+        };
+        for (var i = 0; i < tag.length; i++) {
+            (function(i){
+                $($('.tag')[i]).mousedown(mouseDown);
+            })(i);
+        }
+    }
+function mouseDown(){
+                    _this = $(this);
+                    wrap = $('#wrap');
+                    border = $('#border');                                              
+                    _this.css('left',_this.position().left);
+                    _this.css('top',_this.position().top);
+                    _this.css('position','absolute');   
+                    border.insertBefore(_this );
+                    border.css('display','block');
+                    oEvent = event||ev;
+                    disX = oEvent.clientX-_this.position().left;//记录点击鼠标时，鼠标所在的位置离tag左上角的距离
+                    disY = oEvent.clientY-_this.position().top;
+                    $(document).mousemove(mouseMove);
+                    $(document).mouseup(mouseUp);
+                    return false;
+                }
+function mouseMove(){
+                        var oEvent = event||ev;
+                        var curX =  oEvent.clientX-disX;
+                        var curY =  oEvent.clientY-disY;//每次移动时算出v的新坐标
+                        _this.css('left',curX+'px'); 
+                        _this.css('top',curY+'px');//改变坐标
+                        var min = 1000000000;var x = 100;//存最小值，和最小值对应的DIV的序号
+                        for (var j = 0; j < list.length; j++) {//遍历，找出与移动中的tag与哪一个DIV的距离最小
+                            var dis = (list[j].pLeft-curX)*(list[j].pLeft-curX)+(list[j].pTop-curY)*(list[j].pTop-curY);//求两点间距离的平方，直角三角形已知两边求斜边。
+                            if(dis<min){
+                                min = dis;
+                                x = j;//得出序号X,在这一步之前一直没错，可测试一下。
+                            }
+                        }
+                        if((curX-list[x].pLeft)<0) border.insertBefore($(tag[x]));//把clone插入进来
+                        else  border.insertAfter($(tag[x]));//把clone插入进来
+                    }
+function mouseUp(){
+                        var clone = border.clone();
+                        _this.replaceAll(border);
+                        border = clone;
+                        wrap.append(border);
+                        border.css('display','none');
+                        _this.removeAttr("style");
+                        _this.css('position','relative');
+                        tag = $('.tag');
+                        $(document).unbind('mousemove');
+                        $(document).unbind('mouseup');
+                    }
+
+
+
+    </script>
+<body>
+<div id="wrap">
+
+<a href="#" class="tag"><div class="unit">1</div></a>
+<a href="#" class="tag"><div class="unit">2</div></a>
+<a href="#" class="tag"><div class="unit">3</div></a>
+<a href="#" class="tag"><div class="unit">4</div></a>
+<a href="#" class="tag"><div class="unit">5</div></a>
+<a href="#" class="tag"><div class="unit">6</div></a>
+<div id="border"></div>
+</div>
+</body>
+</html>
