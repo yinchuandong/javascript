@@ -64,7 +64,10 @@ function storePos(){
         };
 }
 function mouseDown(){
+<<<<<<< HEAD
                     storePos();
+=======
+>>>>>>> 5ef7adede01689974fb1eeeae6aee84f8d4910f9
                     _this = $(this);
                     wrap = $('#wrap');
                     border = $('#border');                                              
@@ -95,8 +98,13 @@ function mouseMove(){
                             }
                         }
                         var distance = curX-list[x].pLeft;
+<<<<<<< HEAD
                         if(distance<0.5*width&&distance>=0) border.insertAfter($(tag[x]));//把clone插入进来
                         if(distance>(-0.5)*width&&distance<0) border.insertBefore($(tag[x]));//把clone插入进来
+=======
+                        if(distance<0.5*width&&distance>=0) border.insertBefore($(tag[x]));//把clone插入进来
+                        if(distance>(-0.5)*width&&distance<0) border.insertAfter($(tag[x]));//把clone插入进来
+>>>>>>> 5ef7adede01689974fb1eeeae6aee84f8d4910f9
                     }
 function mouseUp(){
                         var clone = border.clone();
@@ -107,6 +115,10 @@ function mouseUp(){
                         _this.removeAttr("style");
                         _this.css('position','relative');
                         tag = $('.tag');
+<<<<<<< HEAD
+=======
+                        storePos();
+>>>>>>> 5ef7adede01689974fb1eeeae6aee84f8d4910f9
                         $(document).unbind('mousemove');
                         $(document).unbind('mouseup');
                         
