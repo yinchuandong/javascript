@@ -78,16 +78,23 @@ function swapItem(ev){
 	}
 
 	lastPos = $(dragElement).offset();//保存拖动元素的位置，
+	console.log(lastPos.top)
+	console.log($(placeHolderItem).offset().top)
 	buildPosTable();
 	return false;
 }
 
 //mouseup的时候把拖动的元素插入到占位符的位置
 function dropItem(){
-	$(dragElement).attr('style','');
-	$(placeHolderItem).before(dragElement);
-	placeHolderItem.remove();
-	dragElement = null;
+	var left = $(placeHolderItem).offset().left;
+	var top = $(placeHolderItem).offset().top;
+	$(dragElement).animate({left:left,top:top},'fast',function(){
+		$(dragElement).removeAttr('style');
+		$(placeHolderItem).before(dragElement);
+		placeHolderItem.remove();
+		dragElement = null;
+	});
+	
 }
 
 //根据pageX,pageY找到重合的元素的index
@@ -109,6 +116,6 @@ function buildPosTable(){
 		loc.bottom = loc.top + $(this).height();
 		loc.elem = $(this);//把当前元素保存下来，占位符插入到这里面
 		pos[i] = loc;
-		console.log(loc)
+		// console.log(loc)
 	});
 }
