@@ -251,6 +251,7 @@
 
 					//list.draggedItem.attr("style", "") doesn't work on IE8 and jQuery 1.5 or lower
 					//list.draggedItem.removeAttr("style") doesn't work on chrome and jQuery 1.6 (works jQuery 1.5 or lower)
+					
 					var orig = list.draggedItem.attr("data-origstyle");
 					list.draggedItem.attr("style", orig);
 					if (orig == "")
