@@ -95,8 +95,8 @@ function mouseMove(){
                             }
                         }
                         var distance = curX-list[x].pLeft;
-                        if(distance<0.5*width&&distance>=0) border.insertBefore($(tag[x]));//把clone插入进来
-                        if(distance>(-0.5)*width&&distance<0) border.insertAfter($(tag[x]));//把clone插入进来
+                        if(distance<0.5*width&&distance>=0) border.insertAfter($(tag[x]));//把clone插入进来
+                        if(distance>(-0.5)*width&&distance<0) border.insertBefore($(tag[x]));//把clone插入进来
                     }
 function mouseUp(){
                         var clone = border.clone();
