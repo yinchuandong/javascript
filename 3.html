@@ -34,25 +34,26 @@
     </style>
 </head>
 
-    <script type="text/javascript">
-    $(document).ready(function() {
-        var drag1 = new beginDrag();
-    });
-    function beginDrag(){
-        tag = $('.tag');
-        list = [];
-        var marginx = 10;
-        var marginy = 10;//每个DIV的外边距，宽和高
-        width = 200;
-        var height = 200;
-        pos = new Object();
-        storePos();
-        for (var i = 0; i < tag.length; i++) {
-            (function(i){
-                $($('.tag')[i]).mousedown(mouseDown);
-            })(i);
-        }
+<script type="text/javascript">
+$(document).ready(function() {
+    var drag1 = new beginDrag();
+});
+function beginDrag(){
+    lastPos = null;
+    tag = $('.tag');
+    list = [];
+    var marginx = 10;
+    var marginy = 10;//每个DIV的外边距，宽和高
+    width = 200;
+    var height = 200;
+    pos = new Object();
+    storePos();
+    for (var i = 0; i < tag.length; i++) {
+        (function(i){
+            $($('.tag')[i]).mousedown(mouseDown);
+        })(i);
     }
+}
 function storePos(){
         list = [];
     for (var i = 0; i < tag.length; i++) {
@@ -60,52 +61,59 @@ function storePos(){
             pos = new Object();
             pos.pLeft = $(tag[i]).position().left;
             pos.pTop =  $(tag[i]).position().top;
+            pos.pRight = $(tag[i]).position().left+$(tag[i]).width();
+            pos.pBottom = $(tag[i]).position().left+$(tag[i]).height();         
             list.push(pos);
         };
 }
 function mouseDown(){
-                    storePos();
-                    _this = $(this);
-                    wrap = $('#wrap');
-                    border = $('#border');                                              
-                    _this.css('left',_this.position().left);
-                    _this.css('top',_this.position().top);
-                    _this.css('position','absolute');   
-                    border.insertBefore(_this );
-                    border.css('display','block');
-                    oEvent = event||ev;
-                    disX = oEvent.clientX-_this.position().left;//记录点击鼠标时，鼠标所在的位置离tag左上角的距离
-                    disY = oEvent.clientY-_this.position().top;
-                    $(document).mousemove(mouseMove);
-                    $(document).mouseup(mouseUp);
-                    return false;
-                }
+    storePos();
+    dragitem = $(this);
+    wrap = $('#wrap');
+    border = $('#border');                                              
+     $(dragitem).css('left', $(dragitem).position().left);
+     $(dragitem).css('top', $(dragitem).position().top);
+     $(dragitem).css('position','absolute');   
+    //border.insertBefore( $(dragitem) );
+    border.css('display','block');
+    oEvent = event||ev;
+    disX = oEvent.clientX- $(dragitem).position().left;//记录点击鼠标时，鼠标所在的位置离tag左上角的距离
+    disY = oEvent.clientY- $(dragitem).position().top;
+    $(document).mousemove(mouseMove);
+    $(document).mouseup(mouseUp);
+    return false;
+}
+function findPos(x,y){
+    var len = list.length;
+    for (var i = 0; i < len; i++) {
+        if (list[i].pLeft < x && list[i].pRight > x && list[i].pTop < y && list[i].pBottom > y)
+            return i;
+    }
+    return -1;
+}
 function mouseMove(){
-                        var oEvent = event||ev;
-                        var curX =  oEvent.clientX-disX;
-                        var curY =  oEvent.clientY-disY;//每次移动时算出v的新坐标
-                        _this.css('left',curX+'px'); 
-                        _this.css('top',curY+'px');//改变坐标
-                        var min = 1000000000;var x = 100;//存最小值，和最小值对应的DIV的序号
-                        for (var j = 0; j < list.length; j++) {//遍历，找出与移动中的tag与哪一个DIV的距离最小
-                            var dis = (list[j].pLeft-curX)*(list[j].pLeft-curX)+(list[j].pTop-curY)*(list[j].pTop-curY);//求两点间距离的平方，直角三角形已知两边求斜边。
-                            if(dis<min){
-                                min = dis;
-                                x = j;//得出序号X,在这一步之前一直没错，可测试一下。
-                            }
-                        }
-                        var distance = curX-list[x].pLeft;
-                        if(distance<0.5*width&&distance>=0) border.insertAfter($(tag[x]));//把clone插入进来
-                        if(distance>(-0.5)*width&&distance<0) border.insertBefore($(tag[x]));//把clone插入进来
-                    }
+    var oEvent = event||ev;
+    var curX =  oEvent.clientX-disX;
+    var curY =  oEvent.clientY-disY;//每次移动时算出v的新坐标
+     $(dragitem).css('left',curX+'px'); 
+     $(dragitem).css('top',curY+'px');//改变坐标
+    var x = findPos(oEvent.clientX,oEvent.clientY);
+    console.log(x);
+    if (lastPos == null || ( lastPos.left > $(dragitem).offset().left || lastPos.top > $(dragitem).offset().top )) {
+        border.insertAfter($(tag[x])); 
+    }else{
+       border.insertBefore($(tag[x]));
+    }
+    lastPos = $(dragitem).offset();
+}
 function mouseUp(){
                         var clone = border.clone();
-                        _this.replaceAll(border);
+                         $(dragitem).replaceAll(border);
                         border = clone;
                         wrap.append(border);
                         border.css('display','none');
-                        _this.removeAttr("style");
-                        _this.css('position','relative');
+                         $(dragitem).removeAttr("style");
+                         $(dragitem).css('position','relative');
                         tag = $('.tag');
                         $(document).unbind('mousemove');
                         $(document).unbind('mouseup');

@@ -62,12 +62,10 @@ function getItem(){
 //mousemove的时候用来交换位置
 function swapItem(ev){
 	var overIndex = findPos(ev.pageX, ev.pageY);
-
 	console.log(overIndex)
 	if (overIndex > dragList.length || overIndex==-1) {
 		return false;
 	}
-	
 	//把dragElement上一次的位置和当前dragElement的位置比较，判断是从左边拖过来的，还是从右边拖过来的
 	if (lastPos == null || ( lastPos.left > $(dragElement).offset().left || lastPos.top > $(dragElement).offset().top )) {
 		$(dragList[overIndex]).before(placeHolderItem);
