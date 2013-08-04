@@ -241,6 +241,7 @@
 						loc.bottom = loc.top + $(this).outerHeight();
 						loc.elm = this;
 						pos[i] = loc;
+						// console.log(loc);
 					});
 					this.pos = pos;
 				},
@@ -307,11 +308,14 @@
 					var fixed = children().not(opts.itemSelector).each(function(i) { this.idx = children().index(this); });
 
 					//if moving draggedItem up or left place placeHolder before list item the dragged item is hovering over otherwise place it after
-					if (lastPos == null || lastPos.top > list.draggedItem.offset().top || lastPos.left > list.draggedItem.offset().left)
+					if (lastPos == null || lastPos.top > list.draggedItem.offset().top || lastPos.left > list.draggedItem.offset().left){
 						$(nlist.pos[ei].elm).after(list.placeHolderItem);
-					else
+						// console.log('after')
+					}else{
 						$(nlist.pos[ei].elm).before(list.placeHolderItem);
-
+						// console.log('before')
+					}
+						
 					//restore fixed items location
 					fixed.each(function() {
 						var elm = children().eq(this.idx).get(0);

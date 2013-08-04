@@ -18,13 +18,14 @@ function beginDrag () {
         allowDrag = true;
         var ml = parseInt(dragElement.css('marginLeft'));
         var mt = parseInt(dragElement.css('marginTop'));
-        offsetX = event.clientX - offset.left + ml;
-        offsetY = event.clientY - offset.top + mt;
+        offsetX = event.pageX - offset.left + ml;
+        offsetY = event.pageY - offset.top + mt;
      
         $(dragElement).after(placeHolderItem);
         $(dragElement).css({position:'absolute','z-index':999,cursor:'move'});
-        buildPosTable();
-        move(event);
+        move(event);//position变为absolute的时候，调整位置，保持在界面上的位置不变
+        buildPosTable();//建立位置数组
+        
         // console.log(style)
         $(document).mousemove(move);
         $(document).mouseup(stop);
@@ -37,13 +38,13 @@ function beginDrag () {
 }
 
 function move(oEvent){
-    var nLeft = oEvent.clientX - offsetX ;
-    var nTop = oEvent.clientY - offsetY;
+    var nLeft = oEvent.pageX - offsetX ;
+    var nTop = oEvent.pageY - offsetY;
     $(dragElement).css({left:nLeft, top:nTop});
     
     swapItem(oEvent);
-    // return false;
-    // console.log(oEvent.clientX);
+    return false;
+    // console.log(oEvent.pageX);
 }
 function stop(oEvent){
     $(document).unbind('mousemove');
@@ -53,34 +54,35 @@ function stop(oEvent){
     
 }
 
+//获得拖动的元素，暂时没用到
 function getItem(){
 	return $('.wrap a');
 }
 
+//mousemove的时候用来交换位置
 function swapItem(ev){
+	var overIndex = findPos(ev.pageX, ev.pageY);
 
-	var overIndex = findPos(ev.clientX, ev.clientY);
+	console.log(overIndex)
 	if (overIndex > dragList.length || overIndex==-1) {
 		return false;
 	}
-	// $(dragList).each(function(index,element){
-	// 	if(index == overIndex){
-	// 		$(dragList[overIndex]).before(placeHolderItem);
-	// 	}
-	// });
-	// $(dragList[overIndex]).before(placeHolderItem);
-	// console.log(overIndex+"--");
-	if (lastPos == null || lastPos.top > $(dragElement).offset().top || lastPos.left > $(dragElement).offset().left) {
+	
+	//把dragElement上一次的位置和当前dragElement的位置比较，判断是从左边拖过来的，还是从右边拖过来的
+	if (lastPos == null || ( lastPos.left > $(dragElement).offset().left || lastPos.top > $(dragElement).offset().top )) {
 		$(dragList[overIndex]).before(placeHolderItem);
+		// $(pos[overIndex].elem).before(placeHolderItem);
 	}else{
 		$(dragList[overIndex]).after(placeHolderItem);
+		// $(pos[overIndex].elem).after(placeHolderItem);
 	}
 
-	lastPos = $(dragElement).offset();
-	//buildPosTable();
+	lastPos = $(dragElement).offset();//保存拖动元素的位置，
+	buildPosTable();
 	return false;
 }
 
+//mouseup的时候把拖动的元素插入到占位符的位置
 function dropItem(){
 	$(dragElement).attr('style','');
 	$(placeHolderItem).before(dragElement);
@@ -88,6 +90,7 @@ function dropItem(){
 	dragElement = null;
 }
 
+//根据pageX,pageY找到重合的元素的index
 function findPos(x,y){
 	var len = pos.length;
 	for (var i = 0; i < len; i++) {
@@ -96,12 +99,16 @@ function findPos(x,y){
 	}
 	return -1;
 }
+
+//建立位置数组
 function buildPosTable(){
-	$(dragList).each(function(i){
+	//这里一定要去除拖动的元素，不然总会自己跟自己重合，因此会导致一闪一闪的
+	$(dragList).not(dragElement).each(function(i){
 		var loc = $(this).offset();
-		loc.right = loc.left + $(this).outerWidth();
-		loc.bottom = loc.top + $(this).outerHeight();
+		loc.right = loc.left + $(this).width();
+		loc.bottom = loc.top + $(this).height();
+		loc.elem = $(this);//把当前元素保存下来，暂时没用到，
 		pos[i] = loc;
-		
+		console.log(loc)
 	});
 }
