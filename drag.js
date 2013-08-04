@@ -64,17 +64,17 @@ function swapItem(ev){
 	var overIndex = findPos(ev.pageX, ev.pageY);
 
 	console.log(overIndex)
-	if (overIndex > dragList.length || overIndex==-1) {
+	if (overIndex==-1) {
 		return false;
 	}
 	
 	//把dragElement上一次的位置和当前dragElement的位置比较，判断是从左边拖过来的，还是从右边拖过来的
 	if (lastPos == null || ( lastPos.left > $(dragElement).offset().left || lastPos.top > $(dragElement).offset().top )) {
-		$(dragList[overIndex]).before(placeHolderItem);
-		// $(pos[overIndex].elem).before(placeHolderItem);
+		// $(dragList[overIndex]).before(placeHolderItem);
+		$(pos[overIndex].elem).after(placeHolderItem);
 	}else{
-		$(dragList[overIndex]).after(placeHolderItem);
-		// $(pos[overIndex].elem).after(placeHolderItem);
+		// $(dragList[overIndex]).after(placeHolderItem);
+		$(pos[overIndex].elem).before(placeHolderItem);
 	}
 
 	lastPos = $(dragElement).offset();//保存拖动元素的位置，
@@ -107,7 +107,7 @@ function buildPosTable(){
 		var loc = $(this).offset();
 		loc.right = loc.left + $(this).width();
 		loc.bottom = loc.top + $(this).height();
-		loc.elem = $(this);//把当前元素保存下来，暂时没用到，
+		loc.elem = $(this);//把当前元素保存下来，占位符插入到这里面
 		pos[i] = loc;
 		console.log(loc)
 	});
